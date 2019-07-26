@@ -17,7 +17,7 @@ metadata:
       console allowing you to see your entire application lifecycle in a single view.
     iconClass: icon-jenkins
     tags: instant-app,jenkins
-  name: release-pipeline-template
+  name: release-management-template
 parameters:
 - description: The name of the application to which this template belongs. It should not have any whitespaces. for e.g. marketdata, accounts, etc.
   displayName: Application Name
@@ -26,6 +26,7 @@ parameters:
 - description: The release name of the application. for e.g. v1, v2, apple, banana, cherry , etc
   displayName: Release Name
   name: RELEASE_NAME
+  required: true
 - description: The Environment in which to release this application. For e.g. DEV, TEST, PTA, PROD
   displayName: Environment
   name: ENVIRONMENT
