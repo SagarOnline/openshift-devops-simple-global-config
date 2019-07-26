@@ -27,33 +27,29 @@ parameters:
   displayName: Release Name
   name: RELEASE_NAME
   required: true
-- description: The Environment in which to release this application. For e.g. DEV, TEST, PTA, PROD
-  displayName: Environment
-  name: ENVIRONMENT
-  required: true
 - description: Git repository url of where Jenkin files of Release pipelines are maintained. 
   displayName: Git repository URL of Jenkins Pipelines
   name: JENKINS_PIPELINE_GIT_URL
   required: true
 - description: Path of jenkinsfile for Rollout pipeline. It should be relative to context directory of Git repository url of of Jenkins Pipelines. 
   displayName: Path of Rollout pipeline jenkinsfile
-  name: ROLLOUT_JENKINSFILE_PATH
+  name: DEV_ROLLOUT_JENKINSFILE_PATH
   required: true
 objects:
 - apiVersion: v1
   kind: BuildConfig
   metadata:
     labels:
-      app: ${APP_NAME}-${RELEASE_NAME}-${ENVIRONMENT}
-      name: ${APP_NAME}-${RELEASE_NAME}-${ENVIRONMENT}-rollout
-    name: ${APP_NAME}-${RELEASE_NAME}-${ENVIRONMENT}-rollout
+      app: ${APP_NAME}-${RELEASE_NAME}-dev
+      name: ${APP_NAME}-${RELEASE_NAME}-dev-rollout
+    name: ${APP_NAME}-${RELEASE_NAME}-dev-rollout
   spec:
     source:
       git:
         uri: ${JENKINS_PIPELINE_GIT_URL}
     strategy:
       jenkinsPipelineStrategy:
-        jenkinsfilePath: ${ROLLOUT_JENKINSFILE_PATH}
+        jenkinsfilePath: ${DEV_ROLLOUT_JENKINSFILE_PATH}
       type: JenkinsPipeline
     triggers:
     - github:
