@@ -49,7 +49,7 @@ objects:
       jenkinsPipelineStrategy:
         jenkinsfilePath: ${DEV_ROLLOUT_JENKINSFILE_PATH}
         env:
-          name: GIT_REPO
+        - name: GIT_REPO
           value: ${JENKINS_PIPELINE_GIT_URL}
       type: JenkinsPipeline
     triggers:
