@@ -30,9 +30,9 @@ parameters:
   name: DEV_ENV_NAME
   required: true
   value: dev
-- description: Git repository url of where Jenkin files of Release pipelines are maintained. 
-  displayName: Git repository URL of Jenkins Pipelines
-  name: JENKINS_PIPELINE_GIT_URL
+- description: Git repository url of the DevOps peoject of the application where all DevOps configuration are maintained such as Jenkinsfiles, parameters, etc.
+  displayName: Git repository URL of DevOps project
+  name: DEVOPS_REPO_GIT_URL
   required: true
 - description: Path of jenkinsfile for Rollout pipeline. It should be relative to context directory of Git repository url of of Jenkins Pipelines. 
   displayName: Path of Rollout pipeline jenkinsfile
@@ -50,13 +50,13 @@ objects:
   spec:
     source:
       git:
-        uri: ${JENKINS_PIPELINE_GIT_URL}
+        uri: ${DEVOPS_REPO_GIT_URL}
     strategy:
       jenkinsPipelineStrategy:
         jenkinsfilePath: ${DEV_ROLLOUT_JENKINSFILE_PATH}
         env:
         - name: GIT_REPO
-          value: ${JENKINS_PIPELINE_GIT_URL}
+          value: ${DEVOPS_REPO_GIT_URL}
       type: JenkinsPipeline
     triggers:
     - github:
