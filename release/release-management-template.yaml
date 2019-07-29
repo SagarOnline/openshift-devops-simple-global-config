@@ -25,6 +25,11 @@ parameters:
   displayName: Release Name
   name: RELEASE_NAME
   required: true
+- description: Constant to use for Dev Environment 
+  displayName: Dev environment name
+  name: DEV_ENV_NAME
+  required: true
+  value: dev
 - description: Git repository url of where Jenkin files of Release pipelines are maintained. 
   displayName: Git repository URL of Jenkins Pipelines
   name: JENKINS_PIPELINE_GIT_URL
@@ -38,9 +43,10 @@ objects:
   kind: BuildConfig
   metadata:
     labels:
-      app: ${APP_NAME}-${RELEASE_NAME}-dev
-      name: ${APP_NAME}-${RELEASE_NAME}-dev-rollout
-    name: ${APP_NAME}-${RELEASE_NAME}-dev-rollout
+      app: ${APP_NAME}
+      release: ${DEV_ENV_NAME}-${RELEASE_NAME}
+      environment: ${APP_NAME}-${RELEASE_NAME}-${DEV_ENV_NAME}
+    name: ${APP_NAME}-${RELEASE_NAME}-${DEV_ENV_NAME}-rollout
   spec:
     source:
       git:
