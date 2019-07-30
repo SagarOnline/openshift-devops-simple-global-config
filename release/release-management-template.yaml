@@ -30,15 +30,23 @@ parameters:
   name: DEV_ENV_NAME
   required: true
   value: dev
-- description: Git repository url of the DevOps peoject of the application where all DevOps configuration are maintained such as Jenkinsfiles, parameters, etc.
-  displayName: Git repository URL of DevOps project
-  name: DEVOPS_REPO_GIT_URL
+- description: Git repository url of the application configuration where all DevOps configuration are maintained such as Jenkinsfiles, parameters, etc.
+  displayName: Git repository URL of Application Config
+  name: APP_CONFIG_GIT_REPO
   required: true
-- description: Path of jenkinsfile for Rollout pipeline. It should be relative to context directory of Git repository url of of Jenkins Pipelines. 
+- description: Git repository url of the application source code 
+  displayName: Git repository URL of Application source code
+  name: APP_SOURCE_GIT_REPO
+  required: true
+- description: Path of Jenkinsfile for Rollout pipeline.  It should be relative to the context directory specified by 'APP_CONFIG_GIT_REPO' param.. 
   displayName: Path of Rollout pipeline jenkinsfile
   name: DEV_ROLLOUT_JENKINSFILE_PATH
   required: true
-objects:
+- description: Path of Jenkinsfile to build application code. It should be relative to the context directory specified by 'APP_CONFIG_GIT_REPO' param.
+  displayName: Path of Jenkinsfile to build application code
+  name: BUILD_JENKINSFILE_PATH
+  required: true
+  objects:
 - apiVersion: v1
   kind: BuildConfig
   metadata:
@@ -50,13 +58,13 @@ objects:
   spec:
     source:
       git:
-        uri: ${DEVOPS_REPO_GIT_URL}
+        uri: ${APP_CONFIG_GIT_REPO}
     strategy:
       jenkinsPipelineStrategy:
         jenkinsfilePath: ${DEV_ROLLOUT_JENKINSFILE_PATH}
         env:
-        - name: GIT_REPO
-          value: ${DEVOPS_REPO_GIT_URL}
+        - name: APP_CONFIG_GIT_REPO
+          value: ${APP_CONFIG_GIT_REPO}
       type: JenkinsPipeline
     triggers:
     - github:
@@ -65,3 +73,21 @@ objects:
     - generic:
         secret: secret101
       type: Generic
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    labels:
+      app: ${APP_NAME}
+      release: ${DEV_ENV_NAME}-${RELEASE_NAME}
+    name: ${APP_NAME}-${RELEASE_NAME}-${DEV_ENV_NAME}-build
+  spec:
+    source:
+      git:
+        uri: ${APP_CONFIG_GIT_REPO}
+    strategy:
+      jenkinsPipelineStrategy:
+        jenkinsfilePath: ${BUILD_JENKINSFILE_PATH}
+        env:
+        - name: APP_SOURCE_GIT_REPO
+          value: ${APP_SOURCE_GIT_REPO}
+      type: JenkinsPipeline
