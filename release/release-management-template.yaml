@@ -46,7 +46,7 @@ parameters:
   displayName: Path of Jenkinsfile to build application code
   name: BUILD_JENKINSFILE_PATH
   required: true
-  objects:
+objects:
 - apiVersion: v1
   kind: BuildConfig
   metadata:
