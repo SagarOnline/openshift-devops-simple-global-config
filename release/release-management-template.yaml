@@ -90,6 +90,8 @@ objects:
         env:
         - name: APP_SOURCE_GIT_REPO
           value: ${APP_SOURCE_GIT_REPO}
+        - name: APP_CONFIG_GIT_REPO
+          value: ${APP_CONFIG_GIT_REPO}
         - name: APP_NAME
           value: ${APP_NAME}
         - name: RELEASE_NAME
