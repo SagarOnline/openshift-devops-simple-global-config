@@ -46,7 +46,14 @@ parameters:
   displayName: Path of Jenkinsfile to build application code
   name: BUILD_JENKINSFILE_PATH
   required: true
+- description: Name of secret to be used by build pipeline (BuildConfig Trigger) for Github webhook.
+  displayName: Secret name used by build pipeline Github trigger
+  name: APP_SOURCE_GIT_REPO_SECRET_NAME
+  required: true
+  
 objects:
+
+# Release pipeline for Dev environment. It will trigger the Jenkins pipeline to release application built by Build pipeline. 
 - apiVersion: v1
   kind: BuildConfig
   metadata:
@@ -65,14 +72,13 @@ objects:
         env:
         - name: APP_CONFIG_GIT_REPO
           value: ${APP_CONFIG_GIT_REPO}
+        - name: RELEASE_NAME
+          value: ${RELEASE_NAME}
+        - name: DEV_ENV_NAME
+          value: ${DEV_ENV_NAME}
       type: JenkinsPipeline
-    triggers:
-    - github:
-        secret: secret101
-      type: GitHub
-    - generic:
-        secret: secret101
-      type: Generic
+
+# Build Pipeline definition. It will trigger the Jenkins pipeline to build application code. 
 - apiVersion: v1
   kind: BuildConfig
   metadata:
@@ -96,5 +102,10 @@ objects:
           value: ${APP_NAME}
         - name: RELEASE_NAME
           value: ${RELEASE_NAME}
-          
+        - name: APP_SOURCE_GIT_REPO_SECRET_NAME
+          value: ${APP_SOURCE_GIT_REPO_SECRET_NAME}  
       type: JenkinsPipeline
+    triggers:
+    - github:
+        secret: ${APP_SOURCE_GIT_REPO_SECRET_NAME}
+      type: GitHub
